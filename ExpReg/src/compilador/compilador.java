@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class compilador {
     public
+        // declaración de variables globales
         int i = 0;
         String Testo = "";
         int tamanio;
@@ -17,7 +18,7 @@ public class compilador {
         ArrayList<String> linea= new ArrayList<String>();
         ArrayList<String> valid = new ArrayList<String>();
                
-        
+        // Metodo para la lectura del txt
         public void leertesto() throws FileNotFoundException, IOException{
             File doc = new File("/Users/danieltovar/Downloads/Ejemplo.txt");
             Scanner obj = new Scanner(doc);
@@ -27,13 +28,7 @@ public class compilador {
             tamanio = Testo.length();
         }
 
-
-        // Programa, dentro de un eval genera la cadena que va a un if, sino va a un error (numero de error(?)) sino quiere un metodo de error un cout "Se esperaba la palabra programa"
-        // eval solo se llama cuando se utiliza un terminal osease los parentesis, menormayorque
-
-        //metodo que guarde todo lo que encuentre
-
-
+        // Metodo para la evaluacion de las palabras reservadas
         public void Evallave(String E){      // Palabras reservadas
             boolean bandera = false;    
             linea.add("@CONS"); linea.add("@VAR"); linea.add("@ENT");
@@ -59,6 +54,7 @@ public class compilador {
             }
         }
 
+        // Metodo para evalular las expresiones regulares
         public String Eval(){
             String Cad ="";
             identiValido =false ;
@@ -66,10 +62,12 @@ public class compilador {
             int contpt = 0;
             if(i < tamanio){
                 int pos = Testo.charAt(i);
+                // elimina o pasa por alto los espacios y saltos de linea
                 if(pos == 32 || pos == 10 || pos == 13){
                     i++;
                     return Eval();
                 }
+
 
                 if(Testo.charAt(i)=='#'){     // Identificadores 
                     Cad="";
@@ -134,15 +132,15 @@ public class compilador {
             }
         }
 
-        
+    // Constructor    
     public compilador(){
     }
+
+    // Función Main
     public static void main(String[] args) throws Exception{
-        compilador metodo;
-        metodo = new compilador();
-        metodo.leertesto();
-
-
+        // compilador metodo;
+        // metodo = new compilador();
+        // metodo.leertesto();
         // System.out.println(metodo.Eval());
         // System.out.println(metodo.Eval());
         // System.out.println(metodo.Eval());
@@ -163,3 +161,11 @@ public class compilador {
 
     }
 }
+/* ---------------------------------------------- NOTAS ---------------------------------------------------- 
+ *      - Programa, dentro de un eval genera la cadena que va a un if, sino va a un error
+ *          (numero de error(?)) sino quiere un metodo de error un cout "Se esperaba la palabra programa"
+ *      
+ *      - eval solo se llama cuando se utiliza un terminal osease los parentesis, menormayorque
+ * 
+ *      + Recomendacion del Yisus: metodo que guarde todo lo que encuentre
+ */
