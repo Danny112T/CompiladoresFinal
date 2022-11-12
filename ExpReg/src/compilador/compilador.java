@@ -121,6 +121,7 @@ public class compilador {
             return Cad;
         } 
 
+        // Inicio de creacion de Metodos segun los diagramas 
         public void programa(){
             String token = Eval();
             if (token == "@INICIO"){
