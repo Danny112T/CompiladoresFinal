@@ -17,7 +17,18 @@ public class compilador {
         boolean numValido = false;
         ArrayList<String> linea= new ArrayList<String>();
         ArrayList<String> valid = new ArrayList<String>();
+        ArrayList<String> errores = new ArrayList<String>();
                
+        public void printError(int num){
+            errores.add("Error (0) se esperaba la palabra '@INICIO'.");
+            errores.add("Error (1) se esperaba un ';' o la palabra '@FINAL'");
+
+
+
+
+            System.out.println(errores.get(num));
+        }
+
         // Metodo para la lectura del txt
         public void leertesto() throws FileNotFoundException, IOException{
             File doc = new File("/Users/danieltovar/Downloads/Ejemplo.txt");
@@ -122,14 +133,45 @@ public class compilador {
         } 
 
         // Inicio de creacion de Metodos segun los diagramas 
-        public void programa(){
+        public void programa(){             //Metodo programa
             String token = Eval();
             if (token == "@INICIO"){
                 Encabezado();
                 Instrucciones();
                 InstAux();
             } else {
-                System.out.println("Error (1) se esperaba la palabra '@INICIO'.");
+                printError(0);
+            }
+        }
+
+        public void InstAux(){              //Metodo InstAux
+            String token = Eval();
+            if(token == ";"){
+                Instrucciones();
+                InstAux();
+            } else if(token == "@FINAL"){
+                // NADA
+            } else{
+                printError(1);
+            }
+        }
+
+        public void Encabezado(){           //Metodo Encabezado
+            AuxCons();
+            AuxVar();
+            AuxProc();
+        }
+
+        public void AuxCons(){             //Metodo AuxConst
+            String token = Eval();
+            if(token == "@CONS"){
+                token = Eval();
+                    if(identiValido==true){
+                        token = Eval();
+                        if(token=="="){
+                            
+                        }
+                    }
             }
         }
 
