@@ -175,6 +175,18 @@ public class compilador {
             }
         }
 
+        public void Encabezado(){
+
+        }
+
+        public void Instrucciones(){
+
+        }
+
+        public void InstAux(){
+            
+        }
+
     // Constructor    
     public compilador(){
     }
