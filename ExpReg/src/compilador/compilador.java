@@ -31,6 +31,9 @@ public class compilador {
             errores.add("Error (6) se esperaba un '('");
             errores.add("Error (7) se esperaba un ')'");
             errores.add("Error (8) se esperaba la palabra '@ENTONCES'");
+            errores.add("Error (9) se esperaba un '{'");
+            errores.add("Error (10) se esperaba un '}'");
+            errores.add("Error (11) se esperaba un ':'");
             System.out.println(errores.get(num));
         }
 
@@ -163,8 +166,8 @@ public class compilador {
 
         public void Encabezado(){           //Metodo Encabezado
             consAux();
-            AuxVar();
-            AuxProc();
+            varAux();
+            funcAux();
         }
 
         public void consAux(){             //Metodo AuxConst
@@ -192,6 +195,11 @@ public class compilador {
             }
         }
 
+        // public void aux1(){
+        //     String token = Eval();
+        //     if(token)
+        // }
+
         public void Instrucciones(){
             String token = Eval();
             switch (token) {
@@ -218,60 +226,88 @@ public class compilador {
                     token = Eval();
                     if(token == "(" ){
                         tipoFor();
-                        ID();
                         token = Eval();
-                        if(token=="="){
-                            asigAux();
+                        if(identiValido==true){
                             token = Eval();
-                            if(token == ":"){
-                                condicion();
+                            if(token=="="){
+                                asigAux();
                                 token = Eval();
                                 if(token == ":"){
-                                    ID();
-                                    forAux();
+                                    condicion();
                                     token = Eval();
-                                    if(token == "{"){
-                                        Instrucciones();
+                                    if(token == ":"){
                                         token = Eval();
-                                        if(token == ";"){
-                                            InstAux2();
+                                        if(identiValido==True){
+                                            forAux();
                                             token = Eval();
-                                            if(token == "}"){
+                                            if(token == "{"){
+                                                Instrucciones();
+                                                token = Eval();
+                                                if(token == ";"){
+                                                    InstAux2();
+                                                    token = Eval();
+                                                    if(token == "}"){
+                                                    } else{
+                                                        printError(10);
+                                                    }
+                                                } else{
+                                                    printError(2);
+                                                }
                                             } else{
-
+                                                printError(9);
                                             }
                                         } else{
-
+                                            printError(3);
                                         }
                                     } else{
-
+                                        printError(11);
                                     }
-                                } else{
-
+                                }else{
+                                    printError(11);
                                 }
                             }else{
-                                
+                                printError(5);
                             }
-                        }else{
-                            printError(5);
+                        } else{
+                            printError(3);
                         }
                     } else{
                         printError(6);
                     }
                     break;
 
-                case "@LLAMA":
-                    
+                case "@SINO":
+                    token = Eval();
+                    if(token == "{"){
+                        Instrucciones();
+                        token = Eval();
+                        if(token == ";"){
+                            InstAux2();
+                            token = Eval();
+                            if(token == "}"){
+                            } else{
+                                printError(10);
+                            }
+                        } else{
+                            printError(2);
+                        }
+                    } else{
+                        printError(9);
+                    }
                     break;
 
-                case "@LEEER":
-                    
+                case "@LLAMA": case "@LEER": case"@ESCRIBIR":
+                    token= Eval();
+                    if(identiValido==true){
+                        token = Eval();
+                        if(token == ";"){
+                        } else{
+                            printError(2);
+                        }
+                    } else {
+                        printError(3);
+                    }
                     break;
-
-                case "@ESCRIBIR":
-                    
-                    break;
-
                 
                 default:
                     if(identiValido==true){                        
