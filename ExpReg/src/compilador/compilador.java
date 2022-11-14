@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.print.attribute.standard.PrinterInfo;
+
 public class compilador {
     public
         // declaración de variables globales
@@ -22,10 +24,13 @@ public class compilador {
         public void printError(int num){
             errores.add("Error (0) se esperaba la palabra '@INICIO'.");
             errores.add("Error (1) se esperaba un ';' o la palabra '@FINAL'");
-
-
-
-
+            errores.add("Error (2) se esperaba un ';'");
+            errores.add("Error (3) se esperaba un identificador valido");
+            errores.add("Error (4) se esperaba la palabra '@CONST'");
+            errores.add("Error (5) se esperaba un '='");
+            errores.add("Error (6) se esperaba un '('");
+            errores.add("Error (7) se esperaba un ')'");
+            errores.add("Error (8) se esperaba la palabra '@ENTONCES'");
             System.out.println(errores.get(num));
         }
 
@@ -157,35 +162,127 @@ public class compilador {
         }
 
         public void Encabezado(){           //Metodo Encabezado
-            AuxCons();
+            consAux();
             AuxVar();
             AuxProc();
         }
 
-        public void AuxCons(){             //Metodo AuxConst
+        public void consAux(){             //Metodo AuxConst
             String token = Eval();
             if(token == "@CONS"){
                 token = Eval();
-                    if(identiValido==true){
+                if(identiValido==true){
+                    token = Eval();
+                    if(token=="="){
+                        aux1();
+                        aux2();
                         token = Eval();
-                        if(token=="="){
-                            
+                        if(token == ";"){
+                        } else {
+                            printError(2);
                         }
+                    } else{
+                        printError(5);
                     }
+                } else{
+                    printError(3);
+                }
+            } else{
+                printError(4);
             }
         }
 
-        public void Encabezado(){
-
-        }
-
         public void Instrucciones(){
-
-        }
-
-        public void InstAux(){
+            String token = Eval();
+            switch (token) {
+                case "@SI":
+                    token = Eval();
+                    if(token == "(" ){
+                        condicion();
+                        token = Eval();
+                        if(token==")"){
+                            token = Eval();
+                            if(token=="@ENTONCES"){
+                            } else{
+                                printError(8);
+                            }
+                        } else{
+                            printError(7);
+                        }
+                    } else{
+                        printError(6);
+                    }
+                    break;
             
+                case "@FOR":
+                    token = Eval();
+                    if(token == "(" ){
+                        tipoFor();
+                        ID();
+                        token = Eval();
+                        if(token=="="){
+                            asigAux();
+                            token = Eval();
+                            if(token == ":"){
+                                condicion();
+                                token = Eval();
+                                if(token == ":"){
+                                    ID();
+                                    forAux();
+                                    token = Eval();
+                                    if(token == "{"){
+                                        Instrucciones();
+                                        token = Eval();
+                                        if(token == ";"){
+                                            InstAux2();
+                                            token = Eval();
+                                            if(token == "}"){
+                                            } else{
+
+                                            }
+                                        } else{
+
+                                        }
+                                    } else{
+
+                                    }
+                                } else{
+
+                                }
+                            }else{
+                                
+                            }
+                        }else{
+                            printError(5);
+                        }
+                    } else{
+                        printError(6);
+                    }
+                    break;
+
+                case "@LLAMA":
+                    
+                    break;
+
+                case "@LEEER":
+                    
+                    break;
+
+                case "@ESCRIBIR":
+                    
+                    break;
+
+                
+                default:
+                    if(identiValido==true){                        
+                    } else{
+                        printError(3);
+                    }
+                    break;
+            }
         }
+
+
 
     // Constructor    
     public compilador(){
