@@ -36,6 +36,10 @@ public class compilador {
             errores.add("Error (11) se esperaba un ':'");
             errores.add("Error (12) se esperaba un numero valido");
             errores.add("Error (13) se esperaba un ','");
+            errores.add("Error (14) se esperaba un '@'");
+            errores.add("Error (15) el tipo de dato no es valido");
+            errores.add("Error (16) se esperaba la palabra '@RET'");
+            errores.add("Error (17) se esperaba la palabra '@FUNC'");
             System.out.println(errores.get(num));
         }
 
@@ -221,6 +225,106 @@ public class compilador {
             }
         }
 
+        public void FUNCAux(){              // metodo funcAux
+            String token = Eval();
+            if(token == "@"){
+                Tipo();
+                token = Eval();
+                if(identiValido == true){
+                    aux2();
+                    token = Eval();
+                    if(token == ";"){
+                        FUNCAux();
+                    } else{
+                        printError(2);
+                    }
+                } else{
+                    printError(3);
+                }
+            }else{
+                printError(14);
+            }
+        }
+    
+        public void tipo(){             // Metodo tipo
+            String token = Eval();
+            switch (token) {
+                case "@ENT": case "@DEC": case "@CAR": case "@CAD": case "BIN":
+
+                    break;
+                default:
+                    printError(15);
+                    break;
+            }
+        }
+
+        public void aux2(){             // Metodo aux2
+            String token = Eval();
+            if(token == ","){
+                token = Eval();
+                if(identiValido == true){
+                    aux2();
+                } else{
+                    printError(3);
+                }
+            } else{
+                printError(13);
+            }
+        }
+
+        public void FuncAux(){
+            String token = Eval();
+            if(token == "@FUNC"){
+                token = Eval();
+                if(identiValido==true){
+                    token = Eval();
+                    if(token=="("){
+                        token = Eval();
+                        if(token==")"){
+                            token=Eval();
+                            if(token=="{"){
+                                Encabezado();
+                                Instrucciones();
+                                token = Eval();
+                                if(token==";"){
+                                    InstAux2();
+                                    token = Eval();
+                                    if(token == "@RET"){
+                                        AsigAux();
+                                        token = Eval();
+                                        if(token == "}"){
+                                            token = Eval();
+                                            if(token == ";"){
+                                                FuncAux();
+                                            } else{
+                                                printError(2);
+                                            }
+                                        } else{
+                                            printError(10);
+                                        } 
+                                    } else{
+                                        printError(16);
+                                    }
+                                } else{
+                                    printError(2);
+                                }
+                            } else{
+                                printError(9);
+                            }
+                        } else{
+                            printError(7);
+                        }
+                    } else{
+                        printError(6);
+                    }
+                } else{
+                    printError(3);
+                }
+            } else{
+                printError(i);
+            }
+        }
+
         public void Instrucciones(){       // metodo instrucciones
             String token = Eval();
             switch (token) {
@@ -317,7 +421,7 @@ public class compilador {
                     }
                     break;
 
-                case "@LLAMA": case "@LEER": case"@ESCRIBIR":
+                case "@LLAMA": case "@LEER": case"@ESCRIBIR": //Metodo @LLAMA @LEER @ESCRIBIR
                     token= Eval();
                     if(identiValido==true){
                         token = Eval();
