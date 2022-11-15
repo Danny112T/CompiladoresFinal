@@ -34,6 +34,8 @@ public class compilador {
             errores.add("Error (9) se esperaba un '{'");
             errores.add("Error (10) se esperaba un '}'");
             errores.add("Error (11) se esperaba un ':'");
+            errores.add("Error (12) se esperaba un numero valido");
+            errores.add("Error (13) se esperaba un ','");
             System.out.println(errores.get(num));
         }
 
@@ -58,8 +60,8 @@ public class compilador {
             linea.add("@IGUAL"); linea.add("@FLOTANTE"); linea.add("@ENTONCES");
             linea.add("@RETORNO"); linea.add("@MENORIGUAL"); linea.add("@MAYORIGUAL"); 
             linea.add("+"); linea.add("*"); linea.add("-"); linea.add("/"); 
-            linea.add("<"); linea.add(">"); linea.add("="); linea.add(";");
-            for(int i=0; i<30; i++){
+            linea.add("<"); linea.add(">"); linea.add("="); linea.add(";"); //29
+            for(int i=0; i<=30; i++){
                 if(E.equals(linea.get(i))){                    
                     bandera = true;
                     break;
@@ -131,7 +133,7 @@ public class compilador {
                             }
                         }
                         numValido = true;
-                } else if((Integer.valueOf(Testo.charAt(i))>=59 && Integer.valueOf(Testo.charAt(i))<=62) || (Integer.valueOf(Testo.charAt(i))>=42 && Integer.valueOf(Testo.charAt(i))<=47) && (Integer.valueOf(Testo.charAt(i))!=44 && Integer.valueOf(Testo.charAt(i))!=46)){
+                } else if((Integer.valueOf(Testo.charAt(i))>=59 /*;<>= */ && Integer.valueOf(Testo.charAt(i))<=62) || (Integer.valueOf(Testo.charAt(i))>=42 && /*aritmeticos */ Integer.valueOf(Testo.charAt(i))<=47) && (Integer.valueOf(Testo.charAt(i))!=46)){
                         Cad = Cad+Testo.charAt(i);
                         i++;
                         Evallave(Cad);
@@ -195,15 +197,34 @@ public class compilador {
             }
         }
 
-        // public void aux1(){
-        //     String token = Eval();
-        //     if(token)
-        // }
+        public void aux1(){                // Metodo aux1
+            String token = Eval();
+            if(token == ","){
+                token = Eval();
+                if(identiValido == true){
+                    token = Eval();
+                    if(token == "="){
+                        token = Eval();
+                        if(numValido==true){
+                            aux1();
+                        } else{
+                            printError(12);
+                        }
+                    } else{
+                        printError(5);
+                    }
+                } else{
+                    printError(3);
+                }
+            } else{
+                printError(13);
+            }
+        }
 
-        public void Instrucciones(){
+        public void Instrucciones(){       // metodo instrucciones
             String token = Eval();
             switch (token) {
-                case "@SI":
+                case "@SI":                 // metodo "@SI"
                     token = Eval();
                     if(token == "(" ){
                         condicion();
@@ -222,7 +243,7 @@ public class compilador {
                     }
                     break;
             
-                case "@FOR":
+                case "@FOR":                // metodo "@FOR"
                     token = Eval();
                     if(token == "(" ){
                         tipoFor();
@@ -276,7 +297,7 @@ public class compilador {
                     }
                     break;
 
-                case "@SINO":
+                case "@SINO":               //Metodo @SINO
                     token = Eval();
                     if(token == "{"){
                         Instrucciones();
