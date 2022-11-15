@@ -40,6 +40,11 @@ public class compilador {
             errores.add("Error (15) el tipo de dato no es valido");
             errores.add("Error (16) se esperaba la palabra '@RET'");
             errores.add("Error (17) se esperaba la palabra '@FUNC'");
+            errores.add("Error (18) se esperaba un '++' o un '--'");
+            errores.add("Error (19) se esperaba un numero o identificador valido");
+            errores.add("Error (20) se esperaba un operador logico valido");
+            errores.add("Error (21) se esperaba un simbolo logico valido");
+            errores.add("Error (22) se esperaba un operador aritmetico valido");
             System.out.println(errores.get(num));
         }
 
@@ -173,7 +178,7 @@ public class compilador {
         public void Encabezado(){           //Metodo Encabezado
             consAux();
             varAux();
-            funcAux();
+            FuncAux();
         }
 
         public void consAux(){             //Metodo AuxConst
@@ -225,16 +230,16 @@ public class compilador {
             }
         }
 
-        public void FUNCAux(){              // metodo funcAux
+        public void varAux(){              // metodo varAux
             String token = Eval();
             if(token == "@"){
-                Tipo();
+                tipo();
                 token = Eval();
                 if(identiValido == true){
                     aux2();
                     token = Eval();
                     if(token == ";"){
-                        FUNCAux();
+                        varAux();
                     } else{
                         printError(2);
                     }
@@ -272,7 +277,7 @@ public class compilador {
             }
         }
 
-        public void FuncAux(){
+        public void FuncAux(){          // Metodo FuncAux
             String token = Eval();
             if(token == "@FUNC"){
                 token = Eval();
@@ -325,6 +330,30 @@ public class compilador {
             }
         }
 
+        public void InstAux2(){         // Metodo InstAux2
+            String token = Eval();
+            if(token==";"){
+                Instrucciones();
+                InstAux2();
+            } else{
+                printError(2);
+            }
+        }
+
+        public void AsigAux(){          // Metodo AsigAux
+            String token = Eval();      // Hasta que funcione el Expre
+            if(identiValido==true){
+                if(numValido==true){
+                    Expre();
+                } else{
+                    printError(12);
+                }
+            }else{
+                printError(3);
+            }
+            
+        }
+
         public void Instrucciones(){       // metodo instrucciones
             String token = Eval();
             switch (token) {
@@ -355,14 +384,14 @@ public class compilador {
                         if(identiValido==true){
                             token = Eval();
                             if(token=="="){
-                                asigAux();
+                                AsigAux();
                                 token = Eval();
                                 if(token == ":"){
                                     condicion();
                                     token = Eval();
                                     if(token == ":"){
                                         token = Eval();
-                                        if(identiValido==True){
+                                        if(identiValido==true){
                                             forAux();
                                             token = Eval();
                                             if(token == "{"){
@@ -421,12 +450,38 @@ public class compilador {
                     }
                     break;
 
-                case "@LLAMA": case "@LEER": case"@ESCRIBIR": //Metodo @LLAMA @LEER @ESCRIBIR
+                case "@LLAMA":  //Metodo @LLAMA  
                     token= Eval();
                     if(identiValido==true){
                         token = Eval();
                         if(token == ";"){
                         } else{
+                            printError(2);
+                        }
+                    } else {
+                        printError(3);
+                    }
+                    break;
+
+                case "@LEER":  // METODO @LEER
+                    token= Eval();
+                    if(identiValido==true){
+                        token = Eval();
+                        if(token == ";"){ //dasdniasnd
+                        } else{
+                            printError(2);
+                        }
+                    } else {
+                        printError(3);
+                    }
+                    break;
+
+                case "@ESCRIBIR":  // METODO @ESCRIBIR
+                    token= Eval();
+                    if(identiValido==true){
+                        token = Eval();
+                        if(token == ";"){
+                        } else{             // GYBUHNJM
                             printError(2);
                         }
                     } else {
@@ -443,6 +498,119 @@ public class compilador {
             }
         }
 
+        public void tipoFor(){                  // Metodo tipoFor
+            String token = Eval();
+            if(token == "@ENT"|| token == "@DEC"){
+
+            } else{
+                printError(15);
+            }
+        }
+
+        public void forAux(){               //metodo forAux
+            String token = Eval();
+            token = token + Eval();
+            if(token == "++" || token == "--"){
+
+            } else{
+                printError(18);
+            }
+        }
+
+        public void condicion(){            // metodo condicion
+            String token = Eval();
+            if(identiValido==true){
+                SimRel();
+                condAux();
+                auxLog();
+            }
+        }
+
+        public void condAux(){                  // metodo condAux
+            String token = Eval();
+            if(numValido == true || identiValido==true){
+
+            }else{
+                printError(19);
+            }
+        }
+
+        public void auxLog(){               // metodo auxLog
+            simLog();
+            condicion();
+        }
+
+        public void Expre(){                // metodo Expre
+            AsigAux();
+            simArit();
+            AsigAux();
+        }
+
+        public void SimRel(){           // metodo SimRel
+            String token = Eval();
+            switch (token) {
+                case "@IGUAL":
+                    
+                    break;
+
+                case "@MENORIGUAL":
+                    
+                    break;
+
+                case "@MAYORIGUAL":
+                    
+                    break;
+
+                case "@DIF":
+                    
+                    break;
+
+                case "<":
+                    
+                    break;
+
+                case ">":
+                    
+                    break;
+                default:
+                    printError(20);
+                    break;
+            }
+        }
+
+        public void simLog(){       // Metodo simLog
+            String token = Eval();
+            if(token == "@AND" || token == "@OR"){
+
+            } else{
+                printError(i);
+            }
+        }
+        
+        public void simArit(){
+            String token = Eval();
+            switch (token) {
+                case "+":
+                    
+                    break;
+            
+                case "-":
+                    
+                    break;
+
+                case "*":
+                    
+                    break;
+
+                case "/":
+                    
+                    break;
+                
+                default:
+                    printError(22);
+                    break;
+            }
+        }
 
 
     // Constructor    
