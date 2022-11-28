@@ -23,7 +23,7 @@ public class compilador {
                
         public void printError(int num){
             errores.add("Error (0) se esperaba la palabra '@INICIO'.");
-            errores.add("Error (1) se esperaba un ';' o la palabra '@FINAL'");
+            errores.add("Error (1) se esperaba un identificador valido o la palabra '@FINAL'");
             errores.add("Error (2) se esperaba un ';'");
             errores.add("Error (3) se esperaba un identificador valido");
             errores.add("Error (4) se esperaba la palabra '@CONST'");
@@ -45,6 +45,7 @@ public class compilador {
             errores.add("Error (20) se esperaba un operador logico valido");
             errores.add("Error (21) se esperaba un simbolo logico valido");
             errores.add("Error (22) se esperaba un operador aritmetico valido");
+            errores.add("Error (23) se esperaba un identificador valido o un numero valido");
             System.out.println(errores.get(num));
         }
 
@@ -154,22 +155,30 @@ public class compilador {
         // Inicio de creacion de Metodos segun los diagramas 
         public void programa(){             //Metodo programa
             String token = Eval();
-            if (token == "@INICIO"){
+            if (token.equals("@INICIO")){
                 Encabezado();
                 Instrucciones();
-                InstAux();
+                token = Eval();
+                if(token.equals(";")){
+                    InstAux();
+                } else{
+                    printError(2);
+                }
             } else {
                 printError(0);
             }
         }
 
         public void InstAux(){              //Metodo InstAux
+            //Leen cadena 
+            //Validar los first de Instrucciones
+            //Regresan a la palabra anterior 
+            Instrucciones();
             String token = Eval();
-            if(token == ";"){
-                Instrucciones();
-                InstAux();
-            } else if(token == "@FINAL"){
+            if(token.equals("@FINAL")){
                 // NADA
+            } else if(token.equals(";")){
+                InstAux();
             } else{
                 printError(1);
             }
@@ -183,18 +192,24 @@ public class compilador {
 
         public void consAux(){             //Metodo AuxConst
             String token = Eval();
-            if(token == "@CONS"){
+            if(token.equals("@CONS")){
                 token = Eval();
                 if(identiValido==true){
                     token = Eval();
-                    if(token=="="){
-                        aux1();
-                        aux2();
+                    if(token.equals("=")){
+                        //validar si es Num
                         token = Eval();
-                        if(token == ";"){
-                        } else {
+                        if(numValido == true){
+                            aux1();
+                            token = Eval();
+                            if(token.equals(";")){
+                                consAux();
+                            } else {
                             printError(2);
-                        }
+                            }
+                        } else{
+                            printError(5);
+                        } 
                     } else{
                         printError(5);
                     }
@@ -208,11 +223,11 @@ public class compilador {
 
         public void aux1(){                // Metodo aux1
             String token = Eval();
-            if(token == ","){
+            if(token.equals(",")){
                 token = Eval();
                 if(identiValido == true){
                     token = Eval();
-                    if(token == "="){
+                    if(token.equals("=")){
                         token = Eval();
                         if(numValido==true){
                             aux1();
@@ -232,13 +247,13 @@ public class compilador {
 
         public void varAux(){              // metodo varAux
             String token = Eval();
-            if(token == "@"){
+            if(token.equals("@")){
                 tipo();
                 token = Eval();
                 if(identiValido == true){
                     aux2();
                     token = Eval();
-                    if(token == ";"){
+                    if(token.equals(";")){
                         varAux();
                     } else{
                         printError(2);
@@ -265,7 +280,7 @@ public class compilador {
 
         public void aux2(){             // Metodo aux2
             String token = Eval();
-            if(token == ","){
+            if(token.equals(",")){
                 token = Eval();
                 if(identiValido == true){
                     aux2();
@@ -279,27 +294,27 @@ public class compilador {
 
         public void FuncAux(){          // Metodo FuncAux
             String token = Eval();
-            if(token == "@FUNC"){
+            if(token.equals("@FUNC")){
                 token = Eval();
                 if(identiValido==true){
                     token = Eval();
-                    if(token=="("){
+                    if(token.equals("(")){
                         token = Eval();
-                        if(token==")"){
+                        if(token.equals(")")){
                             token=Eval();
-                            if(token=="{"){
+                            if(token.equals("{")){
                                 Encabezado();
                                 Instrucciones();
                                 token = Eval();
-                                if(token==";"){
+                                if(token.equals(";")){
                                     InstAux2();
                                     token = Eval();
-                                    if(token == "@RET"){
+                                    if(token.equals("@RET")){
                                         AsigAux();
                                         token = Eval();
-                                        if(token == "}"){
+                                        if(token.equals("}")){
                                             token = Eval();
-                                            if(token == ";"){
+                                            if(token.equals(";")){
                                                 FuncAux();
                                             } else{
                                                 printError(2);
@@ -332,7 +347,7 @@ public class compilador {
 
         public void InstAux2(){         // Metodo InstAux2
             String token = Eval();
-            if(token==";"){
+            if(token.equals(";")){
                 Instrucciones();
                 InstAux2();
             } else{
@@ -343,13 +358,11 @@ public class compilador {
         public void AsigAux(){          // Metodo AsigAux
             String token = Eval();      // Hasta que funcione el Expre
             if(identiValido==true){
-                if(numValido==true){
-                    Expre();
-                } else{
-                    printError(12);
-                }
-            }else{
-                printError(3);
+                Expre();
+            } else if(numValido==true){   
+                Expre();
+            } else{
+                printError(23);
             }
             
         }
@@ -359,14 +372,27 @@ public class compilador {
             switch (token) {
                 case "@SI":                 // metodo "@SI"
                     token = Eval();
-                    if(token == "(" ){
+                    if(token.equals("(")){
                         condicion();
                         token = Eval();
-                        if(token==")"){
+                        if(token.equals(")")){
                             token = Eval();
-                            if(token=="@ENTONCES"){
+                            if(token.equals("{")){
+                                Instrucciones();
+                                token = Eval();
+                                if(token.equals(";")){
+                                    InstAux2();
+                                    token = Eval();
+                                    if(token.equals("}")){
+                                        Sino();
+                                    } else{
+                                        printError(10);
+                                    }
+                                }else {
+                                    printError(2);
+                                }
                             } else{
-                                printError(8);
+                                printError(9);
                             }
                         } else{
                             printError(7);
@@ -378,29 +404,29 @@ public class compilador {
             
                 case "@FOR":                // metodo "@FOR"
                     token = Eval();
-                    if(token == "(" ){
+                    if(token.equals("(")){
                         tipoFor();
                         token = Eval();
                         if(identiValido==true){
                             token = Eval();
-                            if(token=="="){
+                            if(token.equals("=")){
                                 AsigAux();
                                 token = Eval();
-                                if(token == ":"){
+                                if(token.equals(":")){
                                     condicion();
                                     token = Eval();
-                                    if(token == ":"){
+                                    if(token.equals(":")){
                                         token = Eval();
                                         if(identiValido==true){
                                             forAux();
                                             token = Eval();
-                                            if(token == "{"){
+                                            if(token.equals("{")){
                                                 Instrucciones();
                                                 token = Eval();
-                                                if(token == ";"){
+                                                if(token.equals(";")){
                                                     InstAux2();
                                                     token = Eval();
-                                                    if(token == "}"){
+                                                    if(token.equals("}")){
                                                     } else{
                                                         printError(10);
                                                     }
@@ -430,34 +456,10 @@ public class compilador {
                     }
                     break;
 
-                case "@SINO":               //Metodo @SINO
-                    token = Eval();
-                    if(token == "{"){
-                        Instrucciones();
-                        token = Eval();
-                        if(token == ";"){
-                            InstAux2();
-                            token = Eval();
-                            if(token == "}"){
-                            } else{
-                                printError(10);
-                            }
-                        } else{
-                            printError(2);
-                        }
-                    } else{
-                        printError(9);
-                    }
-                    break;
-
                 case "@LLAMA":  //Metodo @LLAMA  
                     token= Eval();
                     if(identiValido==true){
-                        token = Eval();
-                        if(token == ";"){
-                        } else{
-                            printError(2);
-                        }
+                        token = Eval();//vgubh
                     } else {
                         printError(3);
                     }
@@ -466,11 +468,7 @@ public class compilador {
                 case "@LEER":  // METODO @LEER
                     token= Eval();
                     if(identiValido==true){
-                        token = Eval();
-                        if(token == ";"){ //dasdniasnd
-                        } else{
-                            printError(2);
-                        }
+                        token = Eval();//vgybhnj
                     } else {
                         printError(3);
                     }
@@ -479,18 +477,20 @@ public class compilador {
                 case "@ESCRIBIR":  // METODO @ESCRIBIR
                     token= Eval();
                     if(identiValido==true){
-                        token = Eval();
-                        if(token == ";"){
-                        } else{             // GYBUHNJM
-                            printError(2);
-                        }
+                        token = Eval(); // dasda
                     } else {
                         printError(3);
                     }
                     break;
                 
                 default:
-                    if(identiValido==true){                        
+                    if(identiValido==true){
+                        token = Eval();
+                        if(token.equals("=")){
+                            AsigAux();
+                        } else{
+                            printError(5);
+                        }
                     } else{
                         printError(3);
                     }
@@ -498,9 +498,31 @@ public class compilador {
             }
         }
 
+        public void Sino(){
+            String token = Eval();
+            if(token.equals("@SINO")){
+                if(token.equals("{")){
+                    Instrucciones();
+                    token = Eval();
+                    if(token.equals(";")){
+                        InstAux2();
+                        token = Eval();
+                        if(token.equals("}")){
+                        } else{
+                            printError(10);
+                        }
+                    } else{
+                        printError(2);
+                    }
+                } else{
+                    printError(9);
+                }
+            }
+        }
+
         public void tipoFor(){                  // Metodo tipoFor
             String token = Eval();
-            if(token == "@ENT"|| token == "@DEC"){
+            if(token.equals("@ENT") || token.equals("@DEC")){
 
             } else{
                 printError(15);
@@ -510,7 +532,7 @@ public class compilador {
         public void forAux(){               //metodo forAux
             String token = Eval();
             token = token + Eval();
-            if(token == "++" || token == "--"){
+            if(token.equals("++") || token.equals("--")){
 
             } else{
                 printError(18);
@@ -541,7 +563,6 @@ public class compilador {
         }
 
         public void Expre(){                // metodo Expre
-            AsigAux();
             simArit();
             AsigAux();
         }
@@ -580,7 +601,7 @@ public class compilador {
 
         public void simLog(){       // Metodo simLog
             String token = Eval();
-            if(token == "@AND" || token == "@OR"){
+            if(token.equals("@AND") || token.equals("@OR")){
 
             } else{
                 printError(i);
