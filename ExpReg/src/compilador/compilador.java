@@ -51,7 +51,7 @@ public class compilador {
 
         // Metodo para la lectura del txt
         public void leertesto() throws FileNotFoundException, IOException{
-            File doc = new File("/Users/danieltovar/Downloads/Ejemplo.txt");
+            File doc = new File("/Users/danieltovar/Downloads/Ejemplo.txt");     // Direccion de su txt
             Scanner obj = new Scanner(doc);
             while(obj.hasNextLine()){
                 Testo = Testo + obj.nextLine();
@@ -200,8 +200,8 @@ public class compilador {
         }
 
         public void consAux(){             //Metodo AuxConst
-            String token = Eval();
-            if(!token.equals("@") && !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
+            String token = Eval(); //  
+            if(token.charAt(0)!='@' && !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
                 if(token.equals("@CONS")){
                     token = Eval();
                     if(identiValido==true){
@@ -261,14 +261,14 @@ public class compilador {
 
         public void varAux(){              // metodo varAux
             String token = Eval();
-            if(token.equals("@")){
-                tipo();
+            if(token.charAt(0) == '@'){
+                tipo(token);
                 token = Eval();
                 if(identiValido == true){
                     aux2();
                     token = Eval();
                     if(token.equals(";")){
-                        varAux();
+                        varAux(); //
                     } else{
                         printError(2);
                     }
@@ -280,8 +280,8 @@ public class compilador {
             }
         }
     
-        public void tipo(){             // Metodo tipo
-            String token = Eval();
+        public void tipo(String e){             // Metodo tipo //se le agrego como parametro la cadena
+            String token = e;
             switch (token) {
                 case "@ENT": case "@DEC": case "@CAR": case "@CAD": case "BIN":
 
@@ -371,7 +371,6 @@ public class compilador {
         public void InstAux2(){         // Metodo InstAux2
             String token = Eval();
             if(!token.equals("@RET")){
-                token = Eval();
                 if(token.equals(";")){
                     Instrucciones();
                     InstAux2();
@@ -531,6 +530,7 @@ public class compilador {
             String token = Eval();
             if(!token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@FOR")){
                 if(token.equals("@SINO")){
+                    token = Eval();
                     if(token.equals("{")){
                         Instrucciones();
                         token = Eval();
