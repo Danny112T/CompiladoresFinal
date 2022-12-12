@@ -14,6 +14,7 @@ public class compilador {
         // declaración de variables globales
         int i = 0;
         String Testo = "";
+        String token = "";
         int tamanio;
         int tamCad;
         boolean identiValido = false;
@@ -163,7 +164,7 @@ public class compilador {
 
         // Inicio de creacion de Metodos segun los diagramas 
         public void programa(){             //Metodo programa
-            String token = Eval();
+            token = Eval();
             if (token.equals("@INICIO")){
                 Encabezado();
                 Instrucciones();
@@ -183,7 +184,7 @@ public class compilador {
             //Validar los first de Instrucciones
             //Regresan a la palabra anterior 
             Instrucciones();
-            String token = Eval();
+            token = Eval();
             if(token.equals("@FINAL")){
                 // NADA
             } else if(token.equals(";")){
@@ -200,7 +201,7 @@ public class compilador {
         }
 
         public void consAux(){             //Metodo AuxConst
-            String token = Eval(); //  
+            token = Eval(); //  
             if(token.charAt(0)!='@' && !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
                 if(token.equals("@CONS")){
                     token = Eval();
@@ -236,7 +237,7 @@ public class compilador {
         }
 
         public void aux1(){                // Metodo aux1
-            String token = Eval();
+            token = Eval();
             if(token.equals(",")){
                 token = Eval();
                 if(identiValido == true){
@@ -260,9 +261,9 @@ public class compilador {
         }
 
         public void varAux(){              // metodo varAux
-            String token = Eval();
+            token = Eval();
             if(token.charAt(0) == '@'){
-                tipo(token);
+                tipo();
                 token = Eval();
                 if(identiValido == true){
                     aux2();
@@ -280,8 +281,7 @@ public class compilador {
             }
         }
     
-        public void tipo(String e){             // Metodo tipo //se le agrego como parametro la cadena
-            String token = e;
+        public void tipo(){             // Metodo tipo //se le agrego como parametro la cadena
             switch (token) {
                 case "@ENT": case "@DEC": case "@CAR": case "@CAD": case "BIN":
 
@@ -293,7 +293,7 @@ public class compilador {
         }
 
         public void aux2(){             // Metodo aux2
-            String token = Eval();
+            token = Eval();
             if(!token.equals(";")){
                 if(token.equals(",")){
                     token = Eval();
@@ -311,7 +311,7 @@ public class compilador {
         }
 
         public void FuncAux(){          // Metodo FuncAux
-            String token = Eval();
+            token = Eval();
             if(!token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@FOR")){
                 if(token.equals("@FUNC")){
                     token = Eval();
@@ -369,7 +369,7 @@ public class compilador {
         }
 
         public void InstAux2(){         // Metodo InstAux2
-            String token = Eval();
+            token = Eval();
             if(!token.equals("@RET")){
                 if(token.equals(";")){
                     Instrucciones();
@@ -384,7 +384,7 @@ public class compilador {
         }
 
         public void AsigAux(){          // Metodo AsigAux
-            String token = Eval();      // Hasta que funcione el Expre
+            token = Eval();      // Hasta que funcione el Expre
             if(identiValido==true){
                 Expre();
             } else if(numValido==true){   
@@ -396,7 +396,7 @@ public class compilador {
         }
 
         public void Instrucciones(){       // metodo instrucciones
-            String token = Eval();
+            token = Eval();
             switch (token) {
                 case "@SI":                 // metodo "@SI"
                     token = Eval();
@@ -527,7 +527,7 @@ public class compilador {
         }
 
         public void Sino(){
-            String token = Eval();
+            token = Eval();
             if(!token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@FOR")){
                 if(token.equals("@SINO")){
                     token = Eval();
@@ -555,7 +555,7 @@ public class compilador {
         }
 
         public void tipoFor(){                  // Metodo tipoFor
-            String token = Eval();
+            token = Eval();
             if(token.equals("@ENT") || token.equals("@DEC")){
 
             } else{
@@ -564,7 +564,7 @@ public class compilador {
         }
 
         public void forAux(){               //metodo forAux
-            String token = Eval();
+            token = Eval();
             token = token + Eval();
             if(token.equals("++") || token.equals("--")){
 
@@ -574,7 +574,7 @@ public class compilador {
         }
 
         public void condicion(){            // metodo condicion
-            String token = Eval();
+            token = Eval();
             if(!token.equals(")")){
                 if(identiValido==true || numValido==true){
                     SimRel();
@@ -590,7 +590,7 @@ public class compilador {
         }
 
         public void condAux(){                  // metodo condAux
-            String token = Eval();
+            token = Eval();
             if(numValido == true || identiValido==true){
 
             }else{
@@ -605,7 +605,7 @@ public class compilador {
              *  regresar en el if y en else
              *  if reglas
              */
-            String token = Eval();
+            token = Eval();
             if(!token.equals(")")){
                 devolver();
                 simLog();
@@ -621,7 +621,7 @@ public class compilador {
         }
 
         public void SimRel(){           // metodo SimRel
-            String token = Eval();
+            token = Eval();
             switch (token) {
                 case "@IGUAL":
                     
@@ -653,16 +653,16 @@ public class compilador {
         }
 
         public void simLog(){       // Metodo simLog
-            String token = Eval();
+            token = Eval();
             if(token.equals("@AND") || token.equals("@OR")){
 
             } else{
-                printError(i);
+                printError(21); 
             }
         }
         
         public void simArit(){
-            String token = Eval();
+            token = Eval();
             switch (token) {
                 case "+":
                     
