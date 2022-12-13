@@ -27,7 +27,7 @@ public class compilador {
             errores.add("Error (0) se esperaba la palabra '@INICIO'.");
             errores.add("Error (1) se esperaba un identificador valido o la palabra '@FINAL'");
             errores.add("Error (2) se esperaba un ';' en caracter " + i);
-            errores.add("Error (3) se esperaba un identificador valido");
+            errores.add("Error (3) se esperaba un identificador valido en caracter " + i );
             errores.add("Error (4) se esperaba la palabra '@CONST'");
             errores.add("Error (5) se esperaba un '='");
             errores.add("Error (6) se esperaba un '('");
@@ -39,7 +39,7 @@ public class compilador {
             errores.add("Error (12) se esperaba un numero valido");
             errores.add("Error (13) se esperaba un ',' en caracter " + i);
             errores.add("Error (14) se esperaba un '@' en caracter " + i);
-            errores.add("Error (15) el tipo de dato no es valido en caracter " + i );
+            errores.add("Error (15) el tipo de dato no es valido ");
             errores.add("Error (16) se esperaba la palabra '@RET'");
             errores.add("Error (17) se esperaba la palabra '@FUNC'");
             errores.add("Error (18) se esperaba un '++' o un '--'");
@@ -336,7 +336,7 @@ public class compilador {
                                 if(token.equals("{")){
                                     Encabezado();
                                     Instrucciones();
-                                    token = Eval(); // o este
+                                    //token = Eval(); // o este
                                     if(token.equals(";")){ //chance eliminar este
                                         InstAux2();
                                         token = Eval();
@@ -398,11 +398,12 @@ public class compilador {
         public void AsigAux(){          // Metodo AsigAux
             token = Eval();      // Hasta que funcione el Expre
             if(identiValido==true){
-                Expre();
+                //Expre();
             } else if(numValido==true){   
-                Expre();
+                //Expre();
             } else{
-                printError(19);
+                //printError(19);
+                Expre();
             }
             
         }
