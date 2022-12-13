@@ -1,6 +1,5 @@
-@INICIO @ENT #danny, #mich ;
-#danny = 10 ;
-@LEER @danny;
-@SI ( #danny @IGUAL 10 ) 
-{ @LEER #mich ; }
+@INICIO
+@CONS #hola = 1 , #adios = 2;
+@DEC #decim , #float ;
+@FUNC #funcion(){ @DEC #decim ; @LLAMA #float ; @RET #decim }
 @FINAL
