@@ -1,3 +1,6 @@
 @INICIO @ENT #danny, #mich ;
-#danny = 25 ;
+#danny = 10 ;
+@LEER @danny;
+@SI ( #danny @IGUAL 10 ) 
+{ @LEER #mich ; }
 @FINAL
