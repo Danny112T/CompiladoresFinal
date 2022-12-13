@@ -80,7 +80,7 @@ public class compilador {
             linea.add("@RETORNO"); linea.add("@MENORIGUAL"); linea.add("@MAYORIGUAL"); 
             linea.add("+"); linea.add("*"); linea.add("-"); linea.add("/"); 
             linea.add("<"); linea.add(">"); linea.add("="); linea.add(";"); //29
-            linea.add("@INICIO");
+            linea.add("@INICIO"); linea.add("@FINAL"); linea.add("("); linea.add(")"); 
             for(int i=0; i<=30; i++){
                 if(E.equals(linea.get(i))){                    
                     bandera = true;
@@ -156,7 +156,7 @@ public class compilador {
                             }
                         }
                         numValido = true;
-                } else if((Integer.valueOf(Testo.charAt(i))>=59 /*;<>= */ && Integer.valueOf(Testo.charAt(i))<=62) || (Integer.valueOf(Testo.charAt(i))>=42 && /*aritmeticos */ Integer.valueOf(Testo.charAt(i))<=47) && (Integer.valueOf(Testo.charAt(i))!=46)){
+                } else if((Integer.valueOf(Testo.charAt(i))>=59 /*;<>= */ && Integer.valueOf(Testo.charAt(i))<=62) || (Integer.valueOf(Testo.charAt(i))>=40 && /*aritmeticos */ Integer.valueOf(Testo.charAt(i))<=47) && (Integer.valueOf(Testo.charAt(i))!=46) || Integer.valueOf(Testo.charAt(i))==123 || Integer.valueOf(Testo.charAt(i))==125){
                         Cad = Cad+Testo.charAt(i);
                         tamCad=i-1;
                         i++;
@@ -206,7 +206,7 @@ public class compilador {
 
         public void consAux(){             //Metodo AuxConst
             token = Eval(); //  
-            if( !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
+            if(token.length()!=4 && !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
                 if(token.equals("@CONS")){
                     token = Eval();
                     if(identiValido==true){
@@ -336,8 +336,8 @@ public class compilador {
                                 if(token.equals("{")){
                                     Encabezado();
                                     Instrucciones();
-                                    token = Eval();
-                                    if(token.equals(";")){
+                                    token = Eval(); // o este
+                                    if(token.equals(";")){ //chance eliminar este
                                         InstAux2();
                                         token = Eval();
                                         if(token.equals("@RET")){
