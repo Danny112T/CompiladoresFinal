@@ -25,7 +25,7 @@ public class compilador {
                
         public void printError(int num){
             errores.add("Error (0) se esperaba la palabra '@INICIO'.");
-            errores.add("Error (1) se esperaba un identificador valido o la palabra '@FINAL'");
+            errores.add("Error (1) se esperaba un identificador valido o la palabra '@FINAL' en caracter " + i );
             errores.add("Error (2) se esperaba un ';' en caracter " + i);
             errores.add("Error (3) se esperaba un identificador valido en caracter " + i );
             errores.add("Error (4) se esperaba la palabra '@CONST'");
@@ -188,7 +188,7 @@ public class compilador {
             //Validar los first de Instrucciones
             //Regresan a la palabra anterior 
             Instrucciones();
-            token = Eval();
+            //token = Eval();
             if(token.equals("@FINAL")){
                 // NADA
             } else if(token.equals(";")){
@@ -420,7 +420,7 @@ public class compilador {
                             token = Eval();
                             if(token.equals("{")){
                                 Instrucciones();
-                                token = Eval();
+                                //token = Eval();
                                 if(token.equals(";")){
                                     InstAux2();
                                     token = Eval();
@@ -612,12 +612,6 @@ public class compilador {
         }
 
         public void auxLog(){               // metodo auxLog
-            /*
-             * si tiene epsilon, se pone token = eval()
-             * if() con los follows
-             *  regresar en el if y en else
-             *  if reglas
-             */
             token = Eval();
             if(!token.equals(")")){
                 devolver();
