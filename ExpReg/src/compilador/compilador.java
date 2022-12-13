@@ -26,7 +26,7 @@ public class compilador {
         public void printError(int num){
             errores.add("Error (0) se esperaba la palabra '@INICIO'.");
             errores.add("Error (1) se esperaba un identificador valido o la palabra '@FINAL'");
-            errores.add("Error (2) se esperaba un ';'");
+            errores.add("Error (2) se esperaba un ';' en caracter " + i);
             errores.add("Error (3) se esperaba un identificador valido");
             errores.add("Error (4) se esperaba la palabra '@CONST'");
             errores.add("Error (5) se esperaba un '='");
@@ -37,9 +37,9 @@ public class compilador {
             errores.add("Error (10) se esperaba un '}'");
             errores.add("Error (11) se esperaba un ':'");
             errores.add("Error (12) se esperaba un numero valido");
-            errores.add("Error (13) se esperaba un ','");
-            errores.add("Error (14) se esperaba un '@'");
-            errores.add("Error (15) el tipo de dato no es valido");
+            errores.add("Error (13) se esperaba un ',' en caracter " + i);
+            errores.add("Error (14) se esperaba un '@' en caracter " + i);
+            errores.add("Error (15) el tipo de dato no es valido en caracter " + i );
             errores.add("Error (16) se esperaba la palabra '@RET'");
             errores.add("Error (17) se esperaba la palabra '@FUNC'");
             errores.add("Error (18) se esperaba un '++' o un '--'");
@@ -61,7 +61,11 @@ public class compilador {
         }
 
         public void devolver(){
+            char auxcad, auxcad1;
+            auxcad = Testo.charAt(i);
+            auxcad1 = Testo.charAt(tamCad);
             i = tamCad;
+
         }
 
         // Metodo para la evaluacion de las palabras reservadas
@@ -202,7 +206,7 @@ public class compilador {
 
         public void consAux(){             //Metodo AuxConst
             token = Eval(); //  
-            if(token.charAt(0)!='@' && !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
+            if( !token.equals("@FUNC") && !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@POR")){
                 if(token.equals("@CONS")){
                     token = Eval();
                     if(identiValido==true){
@@ -214,7 +218,7 @@ public class compilador {
                                 aux1();
                                 token = Eval();
                                 if(token.equals(";")){
-                                    consAux();
+                                    //consAux();
                                 } else {
                                 printError(2);
                                 }
@@ -238,47 +242,55 @@ public class compilador {
 
         public void aux1(){                // Metodo aux1
             token = Eval();
-            if(token.equals(",")){
-                token = Eval();
-                if(identiValido == true){
+            if(!token.equals(";")){
+                if(token.equals(",")){
                     token = Eval();
-                    if(token.equals("=")){
+                    if(identiValido == true){
                         token = Eval();
-                        if(numValido==true){
-                            aux1();
+                        if(token.equals("=")){
+                            token = Eval();
+                            if(numValido==true){
+                                aux1();
+                            } else{
+                                printError(12);
+                            }
                         } else{
-                            printError(12);
+                            printError(5);
                         }
                     } else{
-                        printError(5);
+                        printError(3);
                     }
                 } else{
-                    printError(3);
+                    printError(13);
                 }
-            } else{
-                printError(13);
-            }
+            } else {
+            devolver();
+            } 
         }
 
         public void varAux(){              // metodo varAux
             token = Eval();
-            if(token.charAt(0) == '@'){
-                tipo();
-                token = Eval();
-                if(identiValido == true){
-                    aux2();
+            //if(!token.equals(";")){
+                if(token.charAt(0) == '@'){
+                    tipo();
                     token = Eval();
-                    if(token.equals(";")){
-                        varAux(); //
+                    if(identiValido == true){
+                        aux2();
+                        token = Eval();
+                        if(token.equals(";")){
+                            //varAux(); //
+                        } else{
+                            printError(2);
+                        }
                     } else{
-                        printError(2);
+                        printError(3);
                     }
-                } else{
-                    printError(3);
+                }else{
+                    printError(14);
                 }
-            }else{
-                printError(14);
-            }
+            //} else {
+            //    devolver();
+            //} 
         }
     
         public void tipo(){             // Metodo tipo //se le agrego como parametro la cadena
@@ -312,7 +324,7 @@ public class compilador {
 
         public void FuncAux(){          // Metodo FuncAux
             token = Eval();
-            if(!token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@FOR")){
+            if(token.charAt(0) != '#' &&  !token.equals("@LLAMA") && !token.equals("@LEER") && !token.equals("@ESCRIBIR") && !token.equals("@SI") && !token.equals("@FOR")){
                 if(token.equals("@FUNC")){
                     token = Eval();
                     if(identiValido==true){
