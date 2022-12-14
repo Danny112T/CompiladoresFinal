@@ -1,5 +1,11 @@
 @INICIO
-@CONS #hola = 1 , #adios = 2;
+@CONS #hola = 1 , #adios = 2 ;
 @DEC #decim , #float ;
-@FUNC #funcion(){ @DEC #decim ; @LLAMA #float ; @RET #decim }
+@FUNC #funcion(){ @DEC #decim ; @LLAMA #float ; @RET #decim } ; 
+#adios = #hola ;
+@LLAMA #hola ;
+@LEER #adios ;
+@ESCRIBIR #decim ; 
+@SI ( #hola @IGUAL #adios ) { @ESCRIBIR #float ; } @SINO { @ESCRIBIR #decim ; }
+@FOR (@ENT #i = #i + 1 : #i @DIF #adios : #i ++ ) { @LLAMA #hola ; }
 @FINAL
