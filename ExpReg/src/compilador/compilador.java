@@ -80,8 +80,8 @@ public class compilador {
             linea.add("@RETORNO"); linea.add("@MENORIGUAL"); linea.add("@MAYORIGUAL"); 
             linea.add("+"); linea.add("*"); linea.add("-"); linea.add("/"); 
             linea.add("<"); linea.add(">"); linea.add("="); linea.add(";"); //29
-            linea.add("@INICIO"); linea.add("@FINAL"); linea.add("("); linea.add(")"); 
-            for(int i=0; i<=30; i++){
+            linea.add("@INICIO"); linea.add("@FINAL"); linea.add("("); linea.add(")"); linea.add(":");
+            for(int i=0; i<=34; i++){
                 if(E.equals(linea.get(i))){                    
                     bandera = true;
                     break;
@@ -156,7 +156,7 @@ public class compilador {
                             }
                         }
                         numValido = true;
-                } else if((Integer.valueOf(Testo.charAt(i))>=59 /*;<>= */ && Integer.valueOf(Testo.charAt(i))<=62) || (Integer.valueOf(Testo.charAt(i))>=40 && /*aritmeticos */ Integer.valueOf(Testo.charAt(i))<=47) && (Integer.valueOf(Testo.charAt(i))!=46) || Integer.valueOf(Testo.charAt(i))==123 || Integer.valueOf(Testo.charAt(i))==125){
+                } else if((Integer.valueOf(Testo.charAt(i))>=58 /*;<>= */ && Integer.valueOf(Testo.charAt(i))<=62) || (Integer.valueOf(Testo.charAt(i))>=40 && /*aritmeticos */ Integer.valueOf(Testo.charAt(i))<=47) && (Integer.valueOf(Testo.charAt(i))!=46) || Integer.valueOf(Testo.charAt(i))==123 || Integer.valueOf(Testo.charAt(i))==125){
                         Cad = Cad+Testo.charAt(i);
                         tamCad=i-1;
                         i++;
@@ -382,7 +382,7 @@ public class compilador {
 
         public void InstAux2(){         // Metodo InstAux2
             token = Eval();
-            if(!token.equals("@RET")){
+            if(!token.equals("@RET") && !token.equals("}")){
                 if(token.equals(";")){
                     Instrucciones();
                     InstAux2();
@@ -422,10 +422,16 @@ public class compilador {
                                 Instrucciones();
                                 //token = Eval();
                                 if(token.equals(";")){
+                                    devolver();
                                     InstAux2();
                                     token = Eval();
                                     if(token.equals("}")){
-                                        Sino();
+                                        token = Eval();
+                                        if(token.equals("@SINO")){
+                                            devolver();
+                                            Sino();
+                                        }
+                                        InstAux2();
                                     } else{
                                         printError(10);
                                     }
@@ -468,6 +474,7 @@ public class compilador {
                                                     InstAux2();
                                                     token = Eval();
                                                     if(token.equals("}")){
+                                                        InstAux2();
                                                     } else{
                                                         printError(10);
                                                     }
@@ -546,15 +553,16 @@ public class compilador {
                     token = Eval();
                     if(token.equals("{")){
                         Instrucciones();
-                        token = Eval();
+                        //token = Eval();
                         if(token.equals(";")){
+                            devolver();
                             InstAux2();
                             token = Eval();
                             if(token.equals("}")){
                             } else{
                                 printError(10);
                             }
-                        } else{
+                        }else {
                             printError(2);
                         }
                     } else{
