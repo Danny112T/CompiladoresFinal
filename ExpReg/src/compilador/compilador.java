@@ -467,22 +467,28 @@ public class compilador {
                                         if(identiValido==true){
                                             forAux();
                                             token = Eval();
-                                            if(token.equals("{")){
-                                                Instrucciones();
+                                            if(token.equals(")")){
                                                 token = Eval();
-                                                if(token.equals(";")){
-                                                    InstAux2();
-                                                    token = Eval();
-                                                    if(token.equals("}")){
+                                                if(token.equals("{")){
+                                                    Instrucciones();
+                                                    //token = Eval();
+                                                    if(token.equals(";")){
+                                                        devolver();
                                                         InstAux2();
-                                                    } else{
-                                                        printError(10);
+                                                        token = Eval();
+                                                        if(token.equals("}")){
+                                                            InstAux2();
+                                                        } else{
+                                                            printError(10);
+                                                        }
+                                                    }else {
+                                                        printError(2);
                                                     }
                                                 } else{
-                                                    printError(2);
+                                                    printError(9);
                                                 }
                                             } else{
-                                                printError(9);
+                                                printError(7);
                                             }
                                         } else{
                                             printError(3);
@@ -621,7 +627,7 @@ public class compilador {
 
         public void auxLog(){               // metodo auxLog
             token = Eval();
-            if(!token.equals(")")){
+            if(!token.equals(")") && !token.equals(":")){
                 devolver();
                 simLog();
                 condicion();
